@@ -1,6 +1,7 @@
 package com.catering.catering_hub.controllers;
 
 import com.catering.catering_hub.models.*;
+import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
 import com.catering.catering_hub.services.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cater")
@@ -72,5 +72,20 @@ public class CateringController {
     @PostMapping("/saveSessionItemsInfo")
     public ResponseEntity<?> saveSessionItemsInfo(@RequestBody SessionItemsModel sessionItems){
         return new ResponseEntity<>(sessionItemsService.saveSessionItemsInfo(sessionItems), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/saveCateringOrdersInfo")
+    public ResponseEntity<?> saveCaterOrders(@RequestBody CateringOrdersJsonModel caterOders){
+        orderService.saveCateringOrderObjectInfo(caterOders);
+        System.out.println("Event note and order Id's saved successfully");
+
+        List<SessionItemsModel> sessionItemsList = sessionService
+                .saveSessionsJsonList(caterOders.getSessionsJsonModel());
+        System.out.println("Session Information saved successfully");
+
+        sessionItemsService.saveSessionItemsFilteredInfo(sessionItemsList);
+        System.out.println("Structured the catering order details and initiated the order placement.");
+
+        return new ResponseEntity<>(sessionItemsService.saveOrderItemsList(), HttpStatus.CREATED);
     }
 }

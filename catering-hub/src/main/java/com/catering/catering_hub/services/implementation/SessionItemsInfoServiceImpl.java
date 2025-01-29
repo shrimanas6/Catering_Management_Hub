@@ -1,12 +1,14 @@
 package com.catering.catering_hub.services.implementation;
 
 import com.catering.catering_hub.models.SessionItemsModel;
+import com.catering.catering_hub.models.SessionsModel;
 import com.catering.catering_hub.repository.SessionItemsInfoRepo;
 import com.catering.catering_hub.services.SessionItemsInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,11 @@ public class SessionItemsInfoServiceImpl implements SessionItemsInfoService {
     @Autowired
     private SessionItemsInfoRepo sessionItemsInfoRepo;
 
+    @Autowired
+    private SessionInfoServiceImpl sessionInfoServiceImpl;
+
+    private List<SessionItemsModel> orderItemsList;
+
     @Override
     public SessionItemsModel saveSessionItemsInfo(SessionItemsModel sessionItems) {
         int maxId = findMaxId() != null ? findMaxId().intValue() : 0;
@@ -25,8 +32,43 @@ public class SessionItemsInfoServiceImpl implements SessionItemsInfoService {
         String formattedDateString = dateFormat.format(currentDate);
         sessionItems.setCreatedDate(formattedDateString);
         sessionItems.setModifiedDate(formattedDateString);
-        sessionItems.setSessionId(maxId != 0 ? (maxId+1) : 1);
+        sessionItems.setSessionItemId(maxId != 0 ? (maxId+1) : 1);
+        sessionItems.setSessionId(sessionInfoServiceImpl.getSessionsModel().getSessionId());
         return sessionItemsInfoRepo.save(sessionItems);
+    }
+
+    @Override
+    public void saveSessionItemsInfoList(SessionItemsModel sessionItems) {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDateString = dateFormat.format(currentDate);
+        sessionItems.setCreatedDate(formattedDateString);
+        sessionItems.setModifiedDate(formattedDateString);
+
+        Integer maxId = (orderItemsList != null ? orderItemsList.stream()
+                .map(SessionItemsModel::getSessionItemId)
+                .max(Integer::compareTo)
+                .orElse(findMaxId() != null ? findMaxId().intValue() : 0) :
+                (findMaxId() != null ? findMaxId().intValue() : 0));
+
+        sessionItems.setSessionItemId(maxId != 0 ? (maxId+1) : 1);
+//        sessionItems.setSessionId(sessionInfoServiceImpl.getSessionsModel().getSessionId());
+        this.orderItemsList.add(sessionItems);
+    }
+
+    @Override
+    public void saveSessionItemsFilteredInfo(List<SessionItemsModel> sessionItemsList) {
+        orderItemsList = new ArrayList<>();
+        for(SessionItemsModel items : sessionItemsList){
+            saveSessionItemsInfoList(items);
+        }
+    }
+
+    @Override
+    public List<SessionItemsModel> saveOrderItemsList() {
+        sessionItemsInfoRepo.saveAll(orderItemsList);
+        System.out.println("!!------Order Placed Successfully-----!!");
+        return orderItemsList;
     }
 
     public Long findMaxId() {
@@ -39,4 +81,6 @@ public class SessionItemsInfoServiceImpl implements SessionItemsInfoService {
         // Return the max ID, or handle empty list case
         return maxId.orElse(null);  // Or throw exception if needed
     }
+
+
 }

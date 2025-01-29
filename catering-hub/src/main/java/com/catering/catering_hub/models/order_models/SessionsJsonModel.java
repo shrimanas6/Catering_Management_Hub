@@ -1,66 +1,31 @@
-package com.catering.catering_hub.models;
+package com.catering.catering_hub.models.order_models;
 
-import jakarta.persistence.*;
-import lombok.*;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "sessions_table")
-public class SessionsModel {
+@Component
+public class SessionsJsonModel {
 
-    @Id
-    @Column(name = "session_id")
+
     private Integer sessionId;
-    @Column(name = "order_id")
     private String orderId;
-    @Column(name = "session_name")
     private String sessionName;
-    @Column(name = "session_begin_time")
     private String sessionBeginTime;
-    @Column(name = "session_end_time")
     private String sessionEndTime;
-    @Column(name = "session_description")
     private String sessionDescription;
-    @Column(name = "session_quantity")
     private Integer sessionQuantity;
 
-    @Column(name = "event_date")
     private String eventDate;
-    @Column(name = "event_location")
     private String eventLocation;
-    @Column(name = "event_address")
     private String eventAddress;
 
-    @Column(name = "created_by")
     private Integer createdBy;
-    @Column(name = "created_date")
     private String createdDate;
-    @Column(name = "modified_date")
     private String modifiedDate;
-    @Column(name = "modified_by")
     private Integer modifiedBy;
 
-    public SessionsModel(Integer sessionId, String orderId, String sessionName, String sessionBeginTime, String sessionEndTime, String sessionDescription, Integer sessionQuantity, String eventDate, String eventLocation, String eventAddress, Integer createdBy, String createdDate, String modifiedDate, Integer modifiedBy, List<SessionItemsModel> itemsList) {
-        this.sessionId = sessionId;
-        this.orderId = orderId;
-        this.sessionName = sessionName;
-        this.sessionBeginTime = sessionBeginTime;
-        this.sessionEndTime = sessionEndTime;
-        this.sessionDescription = sessionDescription;
-        this.sessionQuantity = sessionQuantity;
-        this.eventDate = eventDate;
-        this.eventLocation = eventLocation;
-        this.eventAddress = eventAddress;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.modifiedBy = modifiedBy;
-    }
-
-    public SessionsModel() {
-    }
+    private List<SessionItemsJsonModel> sessionItemsJsonModels;
 
     public Integer getSessionId() {
         return sessionId;
@@ -174,4 +139,32 @@ public class SessionsModel {
         this.modifiedBy = modifiedBy;
     }
 
+    public List<SessionItemsJsonModel> getSessionItemsJsonModels() {
+        return sessionItemsJsonModels;
+    }
+
+    public void setSessionItemsJsonModels(List<SessionItemsJsonModel> sessionItemsJsonModels) {
+        this.sessionItemsJsonModels = sessionItemsJsonModels;
+    }
+
+    @Override
+    public String toString() {
+        return "sessionsJsonModel{" +
+                "sessionId=" + sessionId +
+                ", orderId='" + orderId + '\'' +
+                ", sessionName='" + sessionName + '\'' +
+                ", sessionBeginTime='" + sessionBeginTime + '\'' +
+                ", sessionEndTime='" + sessionEndTime + '\'' +
+                ", sessionDescription='" + sessionDescription + '\'' +
+                ", sessionQuantity=" + sessionQuantity +
+                ", eventDate='" + eventDate + '\'' +
+                ", eventLocation='" + eventLocation + '\'' +
+                ", eventAddress='" + eventAddress + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate='" + createdDate + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                ", modifiedBy=" + modifiedBy +
+                ", sessionItemsModelList=" + sessionItemsJsonModels +
+                '}';
+    }
 }

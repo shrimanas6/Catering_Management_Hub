@@ -1,46 +1,20 @@
-package com.catering.catering_hub.models;
+package com.catering.catering_hub.models.order_models;
 
-import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
-@Entity
-@Table(name = "session_items_table")
-public class SessionItemsModel {
+@Component
+public class SessionItemsJsonModel {
 
-    @Id
-    @Column(name = "session_item_id")
     private Integer sessionItemId;
-    @Column(name = "session_id")
     private Integer sessionId;
-    @Column(name = "item_id")
     private Integer itemId;
-    @Column(name = "item_description")
     private String itemDesc;
-    @Column(name = "sub_item_id")
     private Integer subItemId;
 
-    @Column(name = "created_by")
     private Integer createdBy;
-    @Column(name = "created_date")
     private String createdDate;
-    @Column(name = "modified_date")
     private String modifiedDate;
-    @Column(name = "modified_by")
     private Integer modifiedBy;
-
-    public SessionItemsModel(Integer sessionItemId, Integer sessionId, Integer itemId, String itemDesc, Integer subItemId, Integer createdBy, String createdDate, String modifiedDate, Integer modifiedBy) {
-        this.sessionItemId = sessionItemId;
-        this.sessionId = sessionId;
-        this.itemId = itemId;
-        this.itemDesc = itemDesc;
-        this.subItemId = subItemId;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.modifiedBy = modifiedBy;
-    }
-
-    public SessionItemsModel() {
-    }
 
     public Integer getSessionItemId() {
         return sessionItemId;
@@ -114,4 +88,18 @@ public class SessionItemsModel {
         this.modifiedBy = modifiedBy;
     }
 
+    @Override
+    public String toString() {
+        return "SessionItemsJsonModel{" +
+                "sessionItemId=" + sessionItemId +
+                ", sessionId=" + sessionId +
+                ", itemId=" + itemId +
+                ", itemDesc='" + itemDesc + '\'' +
+                ", subItemId=" + subItemId +
+                ", createdBy=" + createdBy +
+                ", createdDate='" + createdDate + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                ", modifiedBy=" + modifiedBy +
+                '}';
+    }
 }

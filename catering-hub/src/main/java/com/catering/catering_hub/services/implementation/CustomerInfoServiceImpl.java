@@ -15,6 +15,7 @@ import java.util.Optional;
 public class CustomerInfoServiceImpl implements CustomerInfoService {
 
     private final CustomerInfoRepo customerRepo;
+    private CustomerInfoModel customer;
 
     @Autowired
     public CustomerInfoServiceImpl(CustomerInfoRepo customerInfoRepo) {
@@ -29,9 +30,15 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDateString = dateFormat.format(currentDate);
         customerInfoEntry.setCreatedDate(formattedDateString);
-        return customerRepo.save(customerInfoEntry);
+        this.customer = customerInfoEntry;
+        customerRepo.save(customerInfoEntry);
+        System.out.println("Customer Information saved successfully...!");
+        return customerInfoEntry;
     }
 
+    public CustomerInfoModel getCustomer(){
+        return customer;
+    }
     @Override
     public List<CustomerInfoModel> getAllCustomers() {
         System.out.println("Loading");
