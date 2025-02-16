@@ -19,14 +19,37 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoModel saveUserInfo(UserInfoModel user) {
-        int maxId = findMaxId() != null ? findMaxId().intValue() : 0;
+        int userId = user.getUserId() != null ? user.getUserId() : 0;
+        int maxId = userId > 0 ? userId : findMaxId() != null ? findMaxId().intValue() : 0;
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDateString = dateFormat.format(currentDate);
 
-        user.setUserId(maxId != 0 ? (maxId+1) : 1);
+        user.setUserId(userId > 0 ? userId : maxId != 0 ? (maxId+1) : 1);
         user.setCreatedDate(formattedDateString);
         return userRepo.save(user);
+    }
+
+    @Override
+    public List<UserInfoModel> getUsers() {
+        return userRepo.findAll();
+    }
+
+    @Override
+    public Optional<UserInfoModel> getUserById(Integer userId) {
+        return userRepo.findById(userId);
+    }
+
+    @Override
+    public String deleteUserById(Integer userId) {
+        userRepo.deleteById(userId);
+        return "User Info Deleted Successfully";
+    }
+
+    @Override
+    public String deleteAllUsers() {
+        userRepo.deleteAll();
+        return "All Users Deleted Successfully";
     }
 
     public Long findMaxId() {

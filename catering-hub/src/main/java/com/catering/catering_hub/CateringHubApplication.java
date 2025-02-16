@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan({"com.catering.catering_hub.controllers", "com.catering.catering_hub.services"})
-@EntityScan("com.catering.catering_hub.models")
+@EntityScan({"com.catering.catering_hub.models"})
 @EnableJpaRepositories("com.catering.catering_hub.repository")
 public class CateringHubApplication {
 

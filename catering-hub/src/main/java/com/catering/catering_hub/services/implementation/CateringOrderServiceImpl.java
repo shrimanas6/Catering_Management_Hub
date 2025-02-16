@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CateringOrderServiceImpl implements CateringOrdersInfoService {
@@ -48,6 +49,11 @@ public class CateringOrderServiceImpl implements CateringOrdersInfoService {
         System.out.println("OrderId : "+caterer.getOrderId());
         this.cateringOrdersModel = caterer;
         ordersRepo.save(caterer);
+    }
+
+    @Override
+    public Optional<CateringOrdersModel> getOrderNoteInfoById(Integer customerId) {
+        return Optional.ofNullable(ordersRepo.findOrderNoteUsingNativeQuery(customerId));
     }
 
     public CateringOrdersModel getCateringOrdersModel(){

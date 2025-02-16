@@ -17,9 +17,27 @@ public class ItemInfoServiceImpl implements ItemInfoService {
 
     @Override
     public ItemMasterModel saveItemInfo(ItemMasterModel item) {
-        int maxId = findMaxId() != null ? findMaxId().intValue() : 0;
-        item.setItemId(maxId != 0 ? (maxId+1) : 1);
+        int itemId = item.getItemId() != null ? item.getItemId() : 0;
+        int maxId = itemId > 0 ? itemId : findMaxId() != null ? findMaxId().intValue() : 0;
+        item.setItemId(itemId > 0 ? itemId : maxId != 0 ? (maxId+1) : 1);
         return itemRepo.save(item);
+    }
+
+    @Override
+    public List<ItemMasterModel> getAllItems() {
+        return itemRepo.findAll();
+    }
+
+    @Override
+    public String deleteItemsById(Integer itemId) {
+        itemRepo.deleteById(itemId);
+        return "Item Info Deleted Successfully";
+    }
+
+    @Override
+    public String deleteAllItems() {
+        itemRepo.deleteAll();
+        return "All Items Deleted Successfully";
     }
 
 

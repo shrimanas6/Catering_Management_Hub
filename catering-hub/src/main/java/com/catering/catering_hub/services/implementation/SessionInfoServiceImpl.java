@@ -86,6 +86,11 @@ public class SessionInfoServiceImpl implements SessionInfoService {
         return orderItemsList;
     }
 
+    @Override
+    public List<SessionsModel> getSessionInfoListById(String orderId) {
+        return sessionRepo.findAllByCustomerId(orderId);
+    }
+
     public SessionsModel getSessionsModel(){
         return sessionsModel;
     }
@@ -117,15 +122,18 @@ public class SessionInfoServiceImpl implements SessionInfoService {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDateString = dateFormat.format(currentDate);
-        sessions.setCreatedDate(formattedDateString);
+        int sessionId = sessions.getSessionId() != null ? sessions.getSessionId() : 0;
+
+        sessions.setCreatedDate(sessionId > 0 && sessions.getCreatedDate() != null ? sessions.getCreatedDate() : formattedDateString);
         sessions.setModifiedDate(formattedDateString);
-        Integer maxId = (sessionsModelList != null ? sessionsModelList.stream()
+
+        int maxId = sessionId > 0 ? sessionId : (sessionsModelList != null ? sessionsModelList.stream()
                 .map(SessionsModel::getSessionId)
                 .max(Integer::compareTo)
                 .orElse(findMaxId() != null ? findMaxId().intValue() : 0) :
                 (findMaxId() != null ? findMaxId().intValue() : 0));
 
-        sessions.setSessionId(maxId != 0 ? (maxId+1) : 1);
+        sessions.setSessionId(sessionId > 0 ? sessionId : maxId != 0 ? (maxId+1) : 1);
         sessions.setOrderId(cateringOrderImpl != null ? cateringOrderImpl.getCateringOrdersModel().getOrderId() : "1");
 
         sessionsModel.setOrderId(sessions.getOrderId());

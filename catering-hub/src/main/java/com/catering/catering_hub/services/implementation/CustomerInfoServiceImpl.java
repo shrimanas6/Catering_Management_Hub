@@ -24,15 +24,21 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
     @Override
     public CustomerInfoModel saveCustomer(CustomerInfoModel customerInfoEntry) {
-        int maxId = findMaxId() != null ? findMaxId().intValue() : 0;
-        customerInfoEntry.setCustomerId(maxId != 0 ? (maxId+1) : 1);
+        int customerId = customerInfoEntry.getCustomerId() != null ? customerInfoEntry.getCustomerId() : 0;
+        int maxId = customerId > 0 ? customerId : findMaxId() != null ? findMaxId().intValue() : 0;
+        customerInfoEntry.setCustomerId(customerId > 0 ? customerId : maxId != 0 ? (maxId+1) : 1);
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDateString = dateFormat.format(currentDate);
         customerInfoEntry.setCreatedDate(formattedDateString);
         this.customer = customerInfoEntry;
         customerRepo.save(customerInfoEntry);
-        System.out.println("Customer Information saved successfully...!");
+        if(customerId > 0) {
+            System.out.println("Customer Information updated successfully...!");
+        }
+        else {
+            System.out.println("Customer Information saved successfully...!");
+        }
         return customerInfoEntry;
     }
 
@@ -43,6 +49,23 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
     public List<CustomerInfoModel> getAllCustomers() {
         System.out.println("Loading");
         return customerRepo.findAll();
+    }
+
+    @Override
+    public Optional<CustomerInfoModel> getCustomerById(Integer customerId) {
+        return customerRepo.findById(customerId);
+    }
+
+    @Override
+    public String deleteCustomerById(Integer customerId) {
+        customerRepo.deleteById(customerId);
+        return "Customer Info Deleted Successfully";
+    }
+
+    @Override
+    public String deleteAllCustomers() {
+        customerRepo.deleteAll();
+        return "All Customer Deleted Successfully";
     }
 
     public Long findMaxId() {
