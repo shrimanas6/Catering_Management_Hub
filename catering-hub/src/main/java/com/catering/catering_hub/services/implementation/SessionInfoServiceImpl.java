@@ -61,6 +61,7 @@ public class SessionInfoServiceImpl implements SessionInfoService {
 
     @Override
     public List<SessionItemsModel>  saveSessionsJsonList(List<SessionsJsonModel> sessionsList) {
+        final boolean[] isUpdate = {false};
         sessionsModelList = new ArrayList<>();
         List<SessionItemsModel> orderItemsList = new ArrayList<>();
         sessionsList.forEach(this::saveJsonOrderSessionList);
@@ -75,6 +76,10 @@ public class SessionInfoServiceImpl implements SessionInfoService {
                             itemsModel.setItemDesc(items.getItemDesc());
                             itemsModel.setSubItemId(items.getSubItemId());
                             itemsModel.setCreatedDate(items.getCreatedDate());
+                            itemsModel.setSessionItemId(items.getSessionItemId());
+                            if(itemsModel.getSessionItemId() != null && itemsModel.getSessionItemId() > 0){
+                                isUpdate[0] = true;
+                            }
                             itemsModel.setCreatedBy(items.getCreatedBy());
                             itemsModel.setModifiedBy(items.getModifiedBy());
                             itemsModel.setModifiedDate(items.getModifiedDate());
@@ -83,6 +88,11 @@ public class SessionInfoServiceImpl implements SessionInfoService {
                 )
                 .forEach(orderItemsList::add);
         sessionRepo.saveAll(sessionsModelList);
+        if(isUpdate[0]){
+            System.out.println("Session Information updated successfully");
+        } else {
+            System.out.println("Session Information saved successfully");
+        }
         return orderItemsList;
     }
 

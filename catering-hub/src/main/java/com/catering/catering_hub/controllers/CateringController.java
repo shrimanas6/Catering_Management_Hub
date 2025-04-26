@@ -186,11 +186,10 @@ public class CateringController {
     @PostMapping("/saveCateringOrdersInfo")
     public ResponseEntity<?> saveCaterOrders(@RequestBody CateringOrdersJsonModel caterOders){
         orderService.saveCateringOrderObjectInfo(caterOders);
-        System.out.println("Event note and order Id's saved successfully");
+        System.out.println("Event note and order Id's saved/updated successfully");
 
         List<SessionItemsModel> sessionItemsList = sessionService
                 .saveSessionsJsonList(caterOders.getSessionsJsonModel());
-        System.out.println("Session Information saved successfully");
 
         sessionItemsService.saveSessionItemsFilteredInfo(sessionItemsList);
         System.out.println("Structured the catering order details and initiated the order placement.");
