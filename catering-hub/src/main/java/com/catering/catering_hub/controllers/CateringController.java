@@ -2,6 +2,7 @@ package com.catering.catering_hub.controllers;
 
 import com.catering.catering_hub.models.*;
 import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
+import com.catering.catering_hub.models.order_models.UserInfoJsonModel;
 import com.catering.catering_hub.services.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,18 @@ public class CateringController {
     private final ItemInfoService itemService;
     private final SessionInfoService sessionService;
     private final CateringOrdersInfoService orderService;
+    private final UserInfoService userInfoService;
     private final SessionItemsInfoService sessionItemsService;
     private final CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService;
 
-    public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
+    public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, UserInfoService userInfoService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
         this.customerService = customerService;
         this.userService = userService;
         this.roleService = roleService;
         this.itemService = itemService;
         this.sessionService = sessionService;
         this.orderService = orderService;
+        this.userInfoService = userInfoService;
         this.sessionItemsService = sessionItemsService;
         this.cateringDetailsBulkFetchService = cateringDetailsBulkFetchService;
     }
@@ -64,8 +67,8 @@ public class CateringController {
     }
 
 //  CRUD operations related to Users
-    @PostMapping("/saveUserInfo")
-    public ResponseEntity<?> saveUserInfo(@RequestBody UserInfoModel user){
+    @PostMapping("/register/user")
+    public ResponseEntity<?> saveUserInfo(@RequestBody UserInfoJsonModel user){
         return new ResponseEntity<>(userService.saveUserInfo(user), HttpStatus.CREATED);
     }
 

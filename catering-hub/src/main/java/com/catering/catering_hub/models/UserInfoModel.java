@@ -26,6 +26,16 @@ public class UserInfoModel {
     private String createdDate;
     @Column(value = "USER_ROLE")
     private Integer userRole;
+    @Column(value = "USER_PRODUCT_TYPE")
+    private Integer userProductType;
+
+    public Integer getUserProductType() {
+        return userProductType;
+    }
+
+    public void setUserProductType(Integer userProductType) {
+        this.userProductType = userProductType;
+    }
 
     public UserInfoModel() {
     }
