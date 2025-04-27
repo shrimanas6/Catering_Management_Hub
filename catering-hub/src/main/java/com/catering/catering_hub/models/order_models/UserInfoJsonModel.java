@@ -10,6 +10,7 @@ public class UserInfoJsonModel {
     private String userMobile;
     private String userMail;
     private String userAddress;
+    private String userPassword;
     private String createdBy;
     private String createdDate;
     private Integer userRole;
@@ -87,6 +88,14 @@ public class UserInfoJsonModel {
         this.userProductType = userProductType;
     }
 
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
     @Override
     public String toString() {
         return "UserInfoJsonModel{" +
@@ -95,6 +104,7 @@ public class UserInfoJsonModel {
                 ", userMobile='" + userMobile + '\'' +
                 ", userMail='" + userMail + '\'' +
                 ", userAddress='" + userAddress + '\'' +
+                ", userPassword='"+ userPassword + '\''+
                 ", createdBy='" + createdBy + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", userRole=" + userRole +

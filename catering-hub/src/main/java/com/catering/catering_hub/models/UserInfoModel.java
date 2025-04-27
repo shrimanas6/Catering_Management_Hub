@@ -28,6 +28,16 @@ public class UserInfoModel {
     private Integer userRole;
     @Column(value = "USER_PRODUCT_TYPE")
     private Integer userProductType;
+    @Column(value = "USER_PASSWORD")
+    private String userPassword;
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
 
     public Integer getUserProductType() {
         return userProductType;
@@ -40,7 +50,7 @@ public class UserInfoModel {
     public UserInfoModel() {
     }
 
-    public UserInfoModel(Integer userId, String userName, String userMobile, String userMail, String userAddress, String createdBy, String createdDate, Integer userRole) {
+    public UserInfoModel(Integer userId, String userName, String userMobile, String userMail, String userAddress, String createdBy, String createdDate, Integer userRole, String userPassword) {
         this.userId = userId;
         this.userName = userName;
         this.userMobile = userMobile;
@@ -49,6 +59,7 @@ public class UserInfoModel {
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.userRole = userRole;
+        this.userPassword = userPassword;
     }
 
     public Integer getUserId() {
