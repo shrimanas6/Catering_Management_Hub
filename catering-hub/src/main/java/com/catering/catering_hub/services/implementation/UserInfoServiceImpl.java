@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,27 @@ public class UserInfoServiceImpl implements UserInfoService {
     public String deleteAllUsers() {
         userRepo.deleteAll();
         return "All Users Deleted Successfully";
+    }
+
+    @Override
+    public Boolean loginValidator(UserInfoJsonModel loginInfo) {
+        String email = loginInfo.getUserMail();
+        String password = loginInfo.getUserPassword();
+        var ref = new Object() {
+            boolean isValid = false;
+        };
+        List<UserInfoModel> userInfoList = new ArrayList<>(getUsers());
+        if(!userInfoList.isEmpty()) {
+            userInfoList.forEach(user -> {
+                if (user.getUserMail().equalsIgnoreCase(email)
+                        && user.getUserPassword().equals(password)
+                        && !ref.isValid) {
+                    ref.isValid = true;
+                }
+            });
+        }
+        return ref.isValid;
+
     }
 
     public Long findMaxId() {

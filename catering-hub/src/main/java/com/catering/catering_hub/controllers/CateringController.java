@@ -1,5 +1,6 @@
 package com.catering.catering_hub.controllers;
 
+import com.catering.catering_hub.configs.JwtUtil;
 import com.catering.catering_hub.models.*;
 import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
 import com.catering.catering_hub.models.order_models.UserInfoJsonModel;
@@ -22,9 +23,10 @@ public class CateringController {
     private final ItemInfoService itemService;
     private final SessionInfoService sessionService;
     private final CateringOrdersInfoService orderService;
-    private final UserInfoService userInfoService;
     private final SessionItemsInfoService sessionItemsService;
     private final CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService;
+
+    private JwtUtil jwtService;
 
     public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, UserInfoService userInfoService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
         this.customerService = customerService;
@@ -33,12 +35,18 @@ public class CateringController {
         this.itemService = itemService;
         this.sessionService = sessionService;
         this.orderService = orderService;
-        this.userInfoService = userInfoService;
         this.sessionItemsService = sessionItemsService;
         this.cateringDetailsBulkFetchService = cateringDetailsBulkFetchService;
     }
 
-//   CRUD operations related to Roles
+    @GetMapping("/validate-token")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7); // Remove "Bearer "
+        String username = jwtService.extractUsername(token);
+        return ResponseEntity.ok("Token is valid for user: " + username);
+    }
+
+    //   CRUD operations related to Roles
     @PostMapping("/saveRoleInfo")
     public ResponseEntity<?> saveRoleInfo(@RequestBody RoleInfoModel role){
         return new ResponseEntity<>(roleService.saveRoleInfo(role), HttpStatus.CREATED);
@@ -92,6 +100,11 @@ public class CateringController {
     @DeleteMapping("/deleteUsers")
     public ResponseEntity<?> deleteAllUsers(){
         return new ResponseEntity<>(userService.deleteAllUsers(), HttpStatus.OK);
+    }
+
+    @PostMapping("/users/validate-login")
+    public ResponseEntity<?> validateLogin(@RequestBody UserInfoJsonModel userLoginInfo){
+        return new ResponseEntity<>(userService.loginValidator(userLoginInfo), HttpStatus.OK);
     }
 
 //  CRUD operations related to Items
