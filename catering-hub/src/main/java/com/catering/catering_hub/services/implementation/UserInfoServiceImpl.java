@@ -71,23 +71,32 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Boolean loginValidator(UserInfoJsonModel loginInfo) {
+    public UserInfoModel loginValidator(UserInfoJsonModel loginInfo) {
         String email = loginInfo.getUserMail();
         String password = loginInfo.getUserPassword();
         var ref = new Object() {
             boolean isValid = false;
         };
         List<UserInfoModel> userInfoList = new ArrayList<>(getUsers());
+        UserInfoModel userInfo = new UserInfoModel();
         if(!userInfoList.isEmpty()) {
             userInfoList.forEach(user -> {
                 if (user.getUserMail().equalsIgnoreCase(email)
                         && user.getUserPassword().equals(password)
                         && !ref.isValid) {
                     ref.isValid = true;
+                    userInfo.setUserRole(user.getUserRole());
+                    userInfo.setUserId(user.getUserId());
+                    userInfo.setUserAddress(user.getUserAddress());
+                    userInfo.setUserMobile(user.getUserMobile());
+                    userInfo.setUserMail(user.getUserMail());
+                    userInfo.setUserProductType(user.getUserProductType());
+                    userInfo.setUserName(user.getUserName());
+                    userInfo.setCreatedBy(user.getCreatedBy());
                 }
             });
         }
-        return ref.isValid;
+        return userInfo;
 
     }
 

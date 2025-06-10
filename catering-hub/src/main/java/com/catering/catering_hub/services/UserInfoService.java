@@ -13,5 +13,5 @@ public interface UserInfoService {
     Optional<UserInfoModel> getUserById(Integer userId);
     String deleteUserById(Integer userId);
     String deleteAllUsers();
-    Boolean loginValidator(UserInfoJsonModel loginInfo);
+    UserInfoModel loginValidator(UserInfoJsonModel loginInfo);
 }
