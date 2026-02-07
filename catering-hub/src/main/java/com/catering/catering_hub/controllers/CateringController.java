@@ -1,6 +1,5 @@
 package com.catering.catering_hub.controllers;
 
-import com.catering.catering_hub.configs.JwtUtil;
 import com.catering.catering_hub.models.*;
 import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
 import com.catering.catering_hub.models.order_models.UserInfoJsonModel;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/cater")
 public class CateringController {
@@ -26,7 +26,7 @@ public class CateringController {
     private final SessionItemsInfoService sessionItemsService;
     private final CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService;
 
-    private JwtUtil jwtService;
+//    private JwtUtil jwtService;
 
     public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, UserInfoService userInfoService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
         this.customerService = customerService;
@@ -39,12 +39,12 @@ public class CateringController {
         this.cateringDetailsBulkFetchService = cateringDetailsBulkFetchService;
     }
 
-    @GetMapping("/validate-token")
-    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.substring(7); // Remove "Bearer "
-        String username = jwtService.extractUsername(token);
-        return ResponseEntity.ok("Token is valid for user: " + username);
-    }
+//    @GetMapping("/validate-token")
+//    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
+//        String token = authHeader.substring(7); // Remove "Bearer "
+//        String username = jwtService.extractUsername(token);
+//        return ResponseEntity.ok("Token is valid for user: " + username);
+//    }
 
     //   CRUD operations related to Roles
     @PostMapping("/saveRoleInfo")
