@@ -4,6 +4,7 @@ import com.catering.catering_hub.models.CateringOrdersModel;
 import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
 import com.catering.catering_hub.repository.CateringOrderInfoRepo;
 import com.catering.catering_hub.services.CateringOrdersInfoService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class CateringOrderServiceImpl implements CateringOrdersInfoService {
 
     @Autowired
     private CustomerInfoServiceImpl customerImpll;
+    @Getter
     private CateringOrdersModel cateringOrdersModel;
 
     @Override
@@ -43,7 +45,10 @@ public class CateringOrderServiceImpl implements CateringOrdersInfoService {
         String formattedDateString = dateFormat.format(currentDate);
         caterer.setEventNote(cateringOrder.getEventNote());
         caterer.setCreatedBy(cateringOrder.getCreatedBy());
-        caterer.setOrderId(customerImpll.getCustomer().getCustomerMobile() + customerImpll.getCustomer().getCustomerId());
+        int orderId = cateringOrder.getOrderId() != null && !cateringOrder.getOrderId().isEmpty() ? Integer.parseInt(cateringOrder.getOrderId()) : 0;
+        int maxId = orderId > 0 ? orderId : findMaxId() != null ? findMaxId().intValue() : 0;
+        caterer.setOrderId(String.valueOf(orderId > 0 ? orderId : maxId != 0 ? (maxId+1) : 1));
+//        caterer.setOrderId(customerImpll.getCustomer().getCustomerMobile() + customerImpll.getCustomer().getCustomerId());
         caterer.setCustomerId(customerImpll.getCustomer().getCustomerId());
         caterer.setCreatedDate(formattedDateString);
         System.out.println("OrderId : "+caterer.getOrderId());
@@ -56,7 +61,14 @@ public class CateringOrderServiceImpl implements CateringOrdersInfoService {
         return Optional.ofNullable(ordersRepo.findOrderNoteUsingNativeQuery(customerId));
     }
 
-    public CateringOrdersModel getCateringOrdersModel(){
-        return cateringOrdersModel;
+    public Long findMaxId() {
+        // Fetch all IDs from the repository
+        List<Long> ids = ordersRepo.findAllOrderIdsUsingNativeQuery();
+
+        // Use Streams to find the maximum ID
+        Optional<Long> maxId = ids.stream().max(Long::compareTo);
+
+        // Return the max ID, or handle empty list case
+        return maxId.orElse(null);  // Or throw exception if needed
     }
 }

@@ -2,6 +2,7 @@ package com.catering.catering_hub.controllers;
 
 import com.catering.catering_hub.models.*;
 import com.catering.catering_hub.models.order_models.CateringOrdersJsonModel;
+import com.catering.catering_hub.models.order_models.UserInfoJsonModel;
 import com.catering.catering_hub.services.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/cater")
 public class CateringController {
@@ -24,7 +26,9 @@ public class CateringController {
     private final SessionItemsInfoService sessionItemsService;
     private final CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService;
 
-    public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
+//    private JwtUtil jwtService;
+
+    public CateringController(CustomerInfoService customerService, UserInfoService userService, RoleInfoService roleService, ItemInfoService itemService, SessionInfoService sessionService, CateringOrdersInfoService orderService, UserInfoService userInfoService, SessionItemsInfoService sessionItemsService, CateringDetailsBulkFetchSevice cateringDetailsBulkFetchService) {
         this.customerService = customerService;
         this.userService = userService;
         this.roleService = roleService;
@@ -35,7 +39,14 @@ public class CateringController {
         this.cateringDetailsBulkFetchService = cateringDetailsBulkFetchService;
     }
 
-//   CRUD operations related to Roles
+//    @GetMapping("/validate-token")
+//    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
+//        String token = authHeader.substring(7); // Remove "Bearer "
+//        String username = jwtService.extractUsername(token);
+//        return ResponseEntity.ok("Token is valid for user: " + username);
+//    }
+
+    //   CRUD operations related to Roles
     @PostMapping("/saveRoleInfo")
     public ResponseEntity<?> saveRoleInfo(@RequestBody RoleInfoModel role){
         return new ResponseEntity<>(roleService.saveRoleInfo(role), HttpStatus.CREATED);
@@ -64,8 +75,8 @@ public class CateringController {
     }
 
 //  CRUD operations related to Users
-    @PostMapping("/saveUserInfo")
-    public ResponseEntity<?> saveUserInfo(@RequestBody UserInfoModel user){
+    @PostMapping("/register/user")
+    public ResponseEntity<?> saveUserInfo(@RequestBody UserInfoJsonModel user){
         return new ResponseEntity<>(userService.saveUserInfo(user), HttpStatus.CREATED);
     }
 
@@ -89,6 +100,11 @@ public class CateringController {
     @DeleteMapping("/deleteUsers")
     public ResponseEntity<?> deleteAllUsers(){
         return new ResponseEntity<>(userService.deleteAllUsers(), HttpStatus.OK);
+    }
+
+    @PostMapping("/users/validate-login")
+    public ResponseEntity<?> validateLogin(@RequestBody UserInfoJsonModel userLoginInfo){
+        return new ResponseEntity<>(userService.loginValidator(userLoginInfo), HttpStatus.OK);
     }
 
 //  CRUD operations related to Items
@@ -186,11 +202,10 @@ public class CateringController {
     @PostMapping("/saveCateringOrdersInfo")
     public ResponseEntity<?> saveCaterOrders(@RequestBody CateringOrdersJsonModel caterOders){
         orderService.saveCateringOrderObjectInfo(caterOders);
-        System.out.println("Event note and order Id's saved successfully");
+        System.out.println("Event note and order Id's saved/updated successfully");
 
         List<SessionItemsModel> sessionItemsList = sessionService
                 .saveSessionsJsonList(caterOders.getSessionsJsonModel());
-        System.out.println("Session Information saved successfully");
 
         sessionItemsService.saveSessionItemsFilteredInfo(sessionItemsList);
         System.out.println("Structured the catering order details and initiated the order placement.");
